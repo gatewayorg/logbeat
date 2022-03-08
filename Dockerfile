@@ -5,7 +5,7 @@ RUN go env -w  GOPROXY=https://goproxy.cn,direct
 
 ADD . .
 
-RUN CGO_ENABLE=0 GOOS=linux go build -race -o ./build/server ./cmd/server/
+RUN GOOS=linux go build -o ./build/server ./cmd/server/
 
 FROM alpine
 COPY --from=builder /src/build/ /

@@ -23,6 +23,8 @@ spec:
           imagePullPolicy: IfNotPresent
           command:
             - ./entrypoint.sh
+          args:
+            - ./server
           resources:
             limits:
               cpu: 2000m
