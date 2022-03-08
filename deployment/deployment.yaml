@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-logbeat-deploy
+  labels:
+    deploy: gateway-logbeat-deploy
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: gateway-logbeat-pod
+  template:
+    metadata:
+      labels:
+        app: gateway-logbeat-pod
+      annotations:
+        fluentd.active: "true"
+    spec:
+      containers:
+        - name: gateway-logbeat
+          image: "ankrnetwork/aci-apicollectmgr:3ce4c60"
+          imagePullPolicy: IfNotPresent
+          command:
+            - ./entrypoint.sh
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-logbeat-svc
+  labels:
+    service: gateway-logbeat-svc
+  selector:
+    app: gateway-logbeat-pod
