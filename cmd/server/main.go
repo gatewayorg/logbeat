@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"time"
 
 	"github.com/Ankr-network/kit/mlog"
 	"github.com/urfave/cli/v2"
@@ -20,6 +21,9 @@ func main() {
 }
 
 func mainServe(c *cli.Context) error {
-	log.Info("init")
-	return nil
+	for {
+		time.Sleep(5 * time.Second)
+		log.Info("start")
+	}
+
 }
