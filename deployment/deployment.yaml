@@ -35,7 +35,7 @@ spec:
             topologyKey: kubernetes.io/hostname
       containers:
         - name: gateway-logbeat
-          image: "levtea/gateway-logbeat:dev"
+          image: "levtea/gateway-logbeat:feat"
           imagePullPolicy: Always
           command:
             - ./entrypoint.sh
