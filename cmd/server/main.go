@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
 	"os"
 
 	"github.com/Ankr-network/kit/mlog"
+	"github.com/gatewayorg/logbeat/app"
 	"github.com/gatewayorg/logbeat/share"
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap"
@@ -33,19 +32,19 @@ func main() {
 func mainServe(c *cli.Context) error {
 
 	log.Info("init", zap.Any("dir", c.String(share.LOG_DIR)))
-	_, err := os.Stat(c.String(share.LOG_DIR))
-	if err != nil {
-		log.Error("dir not exist", zap.Error(err))
-		// return err
-	} else {
-		files, _ := ioutil.ReadDir(c.String(share.LOG_DIR))
-		for _, f := range files {
-			fmt.Println(f.Name())
-		}
-	}
+	// _, err := os.Stat(c.String(share.LOG_DIR))
+	// if err != nil {
+	// 	log.Error("dir not exist", zap.Error(err))
+	// 	// return err
+	// } else {
+	// 	files, _ := ioutil.ReadDir(c.String(share.LOG_DIR))
+	// 	for _, f := range files {
+	// 		fmt.Println(f.Name())
+	// 	}
+	// }
 
-	// app.StartProcess(c.String(share.LOG_DIR))
-	select {}
+	app.StartProcess(c.String(share.LOG_DIR))
+	// select {}
 	return nil
 
 }

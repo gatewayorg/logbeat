@@ -1,23 +1,38 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
-  name: gateway-logbeat-deploy
+  name: gateway-logbeat-ds
   namespace: kube-system
   labels:
-    deploy: gateway-logbeat-deploy
+    deploy: gateway-logbeat-ds
 spec:
-  replicas: 1
-  revisionHistoryLimit: 5
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: gateway-logbeat-pod
+      app: gateway-logbeat-ds
   template:
     metadata:
       labels:
-        app: gateway-logbeat-pod
-      annotations:
-        fluentd.active: "true"
+        app: gateway-logbeat-ds
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: gateway
+                operator: In
+                values:
+                - blue-gw
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - gateway-logbeat-ds
+            topologyKey: kubernetes.io/hostname
       containers:
         - name: gateway-logbeat
           image: "levtea/gateway-logbeat:dev"
@@ -31,25 +46,8 @@ spec:
           volumeMounts:
           - mountPath: /mnt/gateway_log
             name: gateway-logs
-          resources:
-            limits:
-              cpu: 2000m
-              memory: 2Gi
-            requests:
-              cpu: 100m
-              memory: 512Mi
       volumes:
         - name: gateway-logs
           hostPath:
             path: /run/containerd/io.containerd.runtime.v2.task/k8s.io
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: gateway-logbeat-svc
-  namespace: kube-system
-  labels:
-    service: gateway-logbeat-svc
-spec:
-  selector:
-    app: gateway-logbeat-pod
+
