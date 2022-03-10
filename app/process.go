@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/hpcloud/tail"
 	"go.uber.org/zap"
@@ -28,9 +27,8 @@ func NewProcessLog(path string) *ProcessLog {
 }
 
 func (p *ProcessLog) Process() {
-	s := strings.Split(p.path, "/")
-	fmt.Println("file name is", s[len(s)-1])
-	if s[len(s)-1] == "access.log" {
+	fmt.Println(p.path[len(p.path)-28:])
+	if p.path[len(p.path)-28:] == "/rootfs/root/logs/access.log" {
 		go func(filePath string) {
 			p.TailLog(filePath)
 		}(p.path)
