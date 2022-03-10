@@ -31,7 +31,7 @@ func NewWatchLog(dirPath string) *WatchLog {
 func (w *WatchLog) WatchDir() {
 	filepath.Walk(w.dirPath, func(path string, info os.FileInfo, err error) error {
 		if info == nil {
-			return err
+			return nil
 		}
 		if info.IsDir() {
 			path, err := filepath.Abs(path)
