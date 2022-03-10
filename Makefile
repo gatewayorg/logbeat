@@ -1,6 +1,6 @@
 SHELL = /bin/bash
 
-REPO ?= lev/gateway-logbeat
+REPO ?= levtea/gateway-logbeat
 
 .PHONY: docker-build
 docker-build:
