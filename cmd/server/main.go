@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"io/ioutil"
 	"os"
 
 	"github.com/Ankr-network/kit/mlog"
@@ -35,6 +37,11 @@ func mainServe(c *cli.Context) error {
 	if err != nil {
 		log.Error("dir not exist", zap.Error(err))
 		// return err
+	} else {
+		files, _ := ioutil.ReadDir(c.String(share.LOG_DIR))
+		for _, f := range files {
+			fmt.Println(f.Name())
+		}
 	}
 
 	// app.StartProcess(c.String(share.LOG_DIR))
