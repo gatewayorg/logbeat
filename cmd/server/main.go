@@ -30,14 +30,15 @@ func main() {
 
 func mainServe(c *cli.Context) error {
 
+	log.Info("init", zap.Any("dir", c.String(share.LOG_DIR)))
 	_, err := os.Stat(c.String(share.LOG_DIR))
 	if err != nil {
 		log.Error("dir not exist", zap.Error(err))
-		return err
+		// return err
 	}
 
 	// app.StartProcess(c.String(share.LOG_DIR))
-
+	select {}
 	return nil
 
 }
