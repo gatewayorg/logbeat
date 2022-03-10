@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -30,6 +31,7 @@ func NewWatchLog(dirPath string) *WatchLog {
 
 func (w *WatchLog) WatchDir() {
 	filepath.Walk(w.dirPath, func(path string, info os.FileInfo, err error) error {
+		fmt.Print("will add path is:", path)
 		if info.IsDir() {
 			path, err := filepath.Abs(path)
 			if err != nil {
