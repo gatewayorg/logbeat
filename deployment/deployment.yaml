@@ -21,11 +21,14 @@ spec:
       containers:
         - name: gateway-logbeat
           image: "levtea/gateway-logbeat:dev"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - ./entrypoint.sh
           args:
             - ./server
+          volumeMounts:
+            - mountPath: /mnt/gateway_log
+            name: gateway-logs
           resources:
             limits:
               cpu: 2000m
@@ -33,6 +36,10 @@ spec:
             requests:
               cpu: 100m
               memory: 512Mi
+      volumes:
+      - name: gateway-logs
+        hostPath:
+          path: /run/containerd/io.containerd.runtime.v2.task/k8s.io
 ---
 apiVersion: v1
 kind: Service
