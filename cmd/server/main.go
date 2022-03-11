@@ -44,7 +44,6 @@ func mainServe(c *cli.Context) error {
 	// }
 
 	app.StartProcess(c.String(share.LOG_DIR))
-	// select {}
 	return nil
 
 }

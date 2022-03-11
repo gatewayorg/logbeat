@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -67,10 +68,10 @@ func (w *WatchLog) WatchDir() {
 					}
 					if ev.Op&fsnotify.Write == fsnotify.Write {
 						log.Info("watch", zap.Any("write is", ev.Name))
-						if !w.pathMap[ev.Name] {
-							w.pathMap[ev.Name] = true
-							w.logFilePathCh <- ev.Name
-						}
+						// if !w.pathMap[ev.Name] {
+						// 	w.pathMap[ev.Name] = true
+						// 	w.logFilePathCh <- ev.Name
+						// }
 					}
 					if ev.Op&fsnotify.Remove == fsnotify.Remove {
 						log.Info("watch", zap.Any("remove is", ev.Name))
@@ -97,31 +98,41 @@ func (w *WatchLog) WatchDir() {
 
 func (w *WatchLog) checkPath(path string) bool {
 
-	// fmt.Println("will add path", path)
+	// fmt.Println(path)
+	// fmt.Println(w.dirPath)
 
 	if path == w.dirPath {
 		return true
 	}
 
-	// if path[len(path)-16:] == "/rootfs/root/logs" {
-	// 	return true
-	// }
-
 	pathList := strings.Split(path, "/")
 
-	// if len(pathList[len(pathList)-1]) == 64 {
-	// 	return true
-	// }
-
-	// for _, v := range pathList {
-	// 	if v == "rootfs" || v == "root" || v == "logs" {
-	// 		return true
-	// 	}
-	// }
-
 	if len(pathList[len(pathList)-1]) == 64 {
+		pathRes := w.dirPath + "/" + pathList[len(pathList)-1] + "/rootfs/root/logs/access.log"
+		fmt.Println(pathRes)
+		existsFlag, _ := PathExists(pathRes)
+		fmt.Println("existsFlag", existsFlag)
+		if existsFlag {
+			if !w.pathMap[pathRes] {
+				w.pathMap[pathRes] = true
+				processLog := NewProcessLog(pathRes)
+				processLog.Process()
+				// w.logFilePathCh <- pathRes
+			}
+		}
 		return true
 	}
 
 	return false
+}
+
+func PathExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
 }

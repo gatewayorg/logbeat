@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/hpcloud/tail"
@@ -26,7 +27,7 @@ func NewProcessLog(path string) *ProcessLog {
 }
 
 func (p *ProcessLog) Process() {
-	// fmt.Println(p.path[len(p.path)-28:])
+	fmt.Println("Process ", p.path[len(p.path)-28:])
 	if p.path[len(p.path)-28:] == "/rootfs/root/logs/access.log" {
 		go func(filePath string) {
 			p.TailLog(filePath)
@@ -50,8 +51,9 @@ func StartProcess(dir string) {
 	defer watchLog.watch.Close()
 	// testProcessLog := NewProcessLog(testWatchLog.logFilePathCh)
 	watchLog.WatchDir()
-	for path := range watchLog.logFilePathCh {
-		ProcessLog := NewProcessLog(path)
-		ProcessLog.Process()
-	}
+	// for path := range watchLog.logFilePathCh {
+	// 	ProcessLog := NewProcessLog(path)
+	// 	ProcessLog.Process()
+	// }
+	select {}
 }
