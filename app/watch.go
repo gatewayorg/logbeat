@@ -144,7 +144,7 @@ func (w *WatchLog) CheckNotExist() {
 					processLog.Process()
 					delete(w.notExistMap, path)
 				} else {
-					if sum >= 10 {
+					if sum >= 15 {
 						fmt.Println("not exist path delete", path)
 						delete(w.notExistMap, path)
 					} else {
