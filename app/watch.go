@@ -119,7 +119,7 @@ func (w *WatchLog) checkPath(path string) bool {
 	// 	}
 	// }
 
-	if len(pathList[len(pathList)-1]) == 64 || pathList[len(pathList)-1] == "rootfs" || pathList[len(pathList)-1] == "root" || pathList[len(pathList)-1] == "logs" {
+	if len(pathList[len(pathList)-1]) == 64 {
 		return true
 	}
 

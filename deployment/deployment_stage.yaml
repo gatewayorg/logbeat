@@ -42,7 +42,7 @@ spec:
           args:
             - ./server
             - -log_dir
-            - "/mnt/gateway_log/"
+            - "/mnt/gateway_log"
           volumeMounts:
           - mountPath: /mnt/gateway_log
             name: gateway-logs
