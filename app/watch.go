@@ -44,7 +44,7 @@ func (w *WatchLog) WatchDir() {
 				if err != nil {
 					return err
 				}
-				log.Info("watch", zap.Any("watch add path is", path))
+				log.Info("watch", zap.Any("init watch add path is", path))
 			}
 
 		}
@@ -109,14 +109,18 @@ func (w *WatchLog) checkPath(path string) bool {
 
 	pathList := strings.Split(path, "/")
 
-	if len(pathList[len(pathList)-1]) == 64 {
-		return true
-	}
+	// if len(pathList[len(pathList)-1]) == 64 {
+	// 	return true
+	// }
 
-	for _, v := range pathList {
-		if v == "rootfs" || v == "root" || v == "logs" {
-			return true
-		}
+	// for _, v := range pathList {
+	// 	if v == "rootfs" || v == "root" || v == "logs" {
+	// 		return true
+	// 	}
+	// }
+
+	if len(pathList[len(pathList)-1]) == 64 || pathList[len(pathList)-1] == "rootfs" || pathList[len(pathList)-1] == "root" || pathList[len(pathList)-1] == "logs" {
+		return true
 	}
 
 	return false
