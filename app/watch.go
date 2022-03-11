@@ -5,16 +5,17 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/fsnotify/fsnotify"
 	"go.uber.org/zap"
 )
 
 type WatchLog struct {
-	dirPath       string
-	watch         *fsnotify.Watcher
-	logFilePathCh chan string
-	pathMap       map[string]bool
+	dirPath     string
+	watch       *fsnotify.Watcher
+	pathMap     map[string]bool
+	notExistMap map[string]int
 }
 
 func NewWatchLog(dirPath string) *WatchLog {
@@ -23,10 +24,10 @@ func NewWatchLog(dirPath string) *WatchLog {
 		log.Fatal("NewWatcher err", zap.Error(err))
 	}
 	return &WatchLog{
-		dirPath:       dirPath,
-		watch:         watch,
-		logFilePathCh: make(chan string),
-		pathMap:       make(map[string]bool),
+		dirPath:     dirPath,
+		watch:       watch,
+		pathMap:     make(map[string]bool),
+		notExistMap: make(map[string]int),
 	}
 }
 
@@ -109,7 +110,7 @@ func (w *WatchLog) checkPath(path string) bool {
 
 	if len(pathList[len(pathList)-1]) == 64 {
 		pathRes := w.dirPath + "/" + pathList[len(pathList)-1] + "/rootfs/root/logs/access.log"
-		fmt.Println(pathRes)
+		fmt.Println("pathRes is ", pathRes)
 		existsFlag, _ := PathExists(pathRes)
 		fmt.Println("existsFlag", existsFlag)
 		if existsFlag {
@@ -119,11 +120,42 @@ func (w *WatchLog) checkPath(path string) bool {
 				processLog.Process()
 				// w.logFilePathCh <- pathRes
 			}
+		} else {
+			fmt.Println("not exist, wait check")
+			w.notExistMap[pathRes] = 1
 		}
 		return true
 	}
 
 	return false
+}
+
+func (w *WatchLog) CheckNotExist() {
+	for {
+		log.Info("Start check not exist log file")
+		if len(w.notExistMap) != 0 {
+			for path, sum := range w.notExistMap {
+				fmt.Println("not exist path is", path)
+				fmt.Println("not exist path sum is", sum)
+				existsFlag, _ := PathExists(path)
+				if existsFlag {
+					fmt.Println("not exist path Create", path)
+					processLog := NewProcessLog(path)
+					processLog.Process()
+					delete(w.notExistMap, path)
+				} else {
+					if sum >= 10 {
+						fmt.Println("not exist path delete", path)
+						delete(w.notExistMap, path)
+					} else {
+						fmt.Println("not exist path sum=+1", path)
+						w.notExistMap[path] = sum + 1
+					}
+				}
+			}
+		}
+		time.Sleep(10 * time.Second)
+	}
 }
 
 func PathExists(path string) (bool, error) {

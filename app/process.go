@@ -55,5 +55,8 @@ func StartProcess(dir string) {
 	// 	ProcessLog := NewProcessLog(path)
 	// 	ProcessLog.Process()
 	// }
+
+	go watchLog.CheckNotExist()
+
 	select {}
 }
