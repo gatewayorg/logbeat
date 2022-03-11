@@ -3,6 +3,7 @@ package app
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/fsnotify/fsnotify"
 	"go.uber.org/zap"
@@ -38,11 +39,14 @@ func (w *WatchLog) WatchDir() {
 			if err != nil {
 				return err
 			}
-			err = w.watch.Add(path)
-			if err != nil {
-				return err
+			if w.checkPath(path) {
+				err = w.watch.Add(path)
+				if err != nil {
+					return err
+				}
+				log.Info("watch", zap.Any("watch add path is", path))
 			}
-			log.Info("watch", zap.Any("watch add path is", path))
+
 		}
 		return nil
 	})
@@ -55,8 +59,10 @@ func (w *WatchLog) WatchDir() {
 						log.Info("watch", zap.Any("create is", ev.Name))
 						fi, err := os.Stat(ev.Name)
 						if err == nil && fi.IsDir() {
-							w.watch.Add(ev.Name)
-							log.Info("watch", zap.Any("watch add path is", ev.Name))
+							if w.checkPath(ev.Name) {
+								w.watch.Add(ev.Name)
+								log.Info("watch", zap.Any("watch add path is", ev.Name))
+							}
 						}
 					}
 					if ev.Op&fsnotify.Write == fsnotify.Write {
@@ -87,4 +93,31 @@ func (w *WatchLog) WatchDir() {
 			}
 		}
 	}()
+}
+
+func (w *WatchLog) checkPath(path string) bool {
+
+	// fmt.Println("will add path", path)
+
+	if path == w.dirPath {
+		return true
+	}
+
+	// if path[len(path)-16:] == "/rootfs/root/logs" {
+	// 	return true
+	// }
+
+	pathList := strings.Split(path, "/")
+
+	if len(pathList[len(pathList)-1]) == 64 {
+		return true
+	}
+
+	for _, v := range pathList {
+		if v == "rootfs" || v == "root" || v == "logs" {
+			return true
+		}
+	}
+
+	return false
 }
