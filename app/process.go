@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/gatewayorg/logbeat/share"
 	"github.com/hpcloud/tail"
 	"go.uber.org/zap"
 )
@@ -28,7 +29,7 @@ func NewProcessLog(path string) *ProcessLog {
 
 func (p *ProcessLog) Process() {
 	fmt.Println("Process ", p.path[len(p.path)-28:])
-	if p.path[len(p.path)-28:] == "/rootfs/root/logs/access.log" {
+	if p.path[len(p.path)-28:] == share.LOG_FILE_PATH_SUFFIX {
 		go func(filePath string) {
 			p.TailLog(filePath)
 		}(p.path)

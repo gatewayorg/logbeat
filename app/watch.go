@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/gatewayorg/logbeat/share"
 	"go.uber.org/zap"
 )
 
@@ -38,7 +39,7 @@ func (w *WatchDir) WatchDir() {
 		files, _ := ioutil.ReadDir(w.dirPath)
 		for _, f := range files {
 			if f.IsDir() {
-				pathRes := w.dirPath + "/" + f.Name() + "/rootfs/root/logs/access.log"
+				pathRes := w.dirPath + "/" + f.Name() + share.LOG_FILE_PATH_SUFFIX
 				existsFlag, _ := PathExists(pathRes)
 				if existsFlag {
 					if !w.pathMap[pathRes] {
