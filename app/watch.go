@@ -34,7 +34,7 @@ func NewWatchDir(dirPath string) *WatchDir {
 
 func (w *WatchDir) WatchDir() {
 	for {
-		log.Info("Watch", zap.Any("Start watch this dir : ", w.dirPath))
+		log.Info("Watch", zap.Any("Start watch this dir", w.dirPath))
 
 		files, _ := ioutil.ReadDir(w.dirPath)
 		for _, f := range files {
@@ -46,12 +46,12 @@ func (w *WatchDir) WatchDir() {
 						w.pathMap[pathRes] = true
 						processLog := NewProcessLog(pathRes)
 						processLog.Process()
-						log.Info("Watch", zap.Any("start process this log : ", pathRes))
+						log.Info("Watch", zap.Any("start process this log", pathRes))
 					} else {
-						log.Info("Watch", zap.Any("processed this log : ", pathRes))
+						log.Info("Watch", zap.Any("processed this log", pathRes))
 					}
 				} else {
-					log.Info("Watch", zap.Any("this log not exist : ", pathRes))
+					log.Info("Watch", zap.Any("this log not exist", pathRes))
 				}
 			}
 		}
