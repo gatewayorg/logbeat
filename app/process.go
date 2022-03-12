@@ -47,16 +47,13 @@ func (p *ProcessLog) TailLog(filePath string) {
 }
 
 func StartProcess(dir string) {
-	watchLog := NewWatchLog(dir)
-	defer watchLog.watch.Close()
-	// testProcessLog := NewProcessLog(testWatchLog.logFilePathCh)
-	watchLog.WatchDir()
-	// for path := range watchLog.logFilePathCh {
-	// 	ProcessLog := NewProcessLog(path)
-	// 	ProcessLog.Process()
-	// }
+	// watchLog := NewWatchLog(dir)
+	// defer watchLog.watch.Close()
+	// watchLog.WatchDir()
+	// go watchLog.CheckNotExist()
+	// select {}
 
-	go watchLog.CheckNotExist()
-
+	WatchDir := NewWatchDir(dir)
+	WatchDir.WatchDir()
 	select {}
 }

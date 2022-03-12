@@ -22,3 +22,8 @@ func TestTailLog(t *testing.T) {
 	testProcessLog.Process()
 	select {}
 }
+
+func TestWatchDir(t *testing.T) {
+	testWatchDir := NewWatchDir("/Users/renzihao/project/github.com/gatewayorg/logbeat/test/run/containerd/io.containerd.runtime.v2.task/k8s.io")
+	testWatchDir.WatchDir()
+}
