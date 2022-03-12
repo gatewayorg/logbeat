@@ -2,6 +2,7 @@ package app
 
 import (
 	"os"
+	"strings"
 
 	"github.com/gatewayorg/logbeat/share"
 	"github.com/hpcloud/tail"
@@ -41,7 +42,8 @@ func (p *ProcessLog) TailLog(filePath string) {
 		return
 	}
 	for line := range t.Lines {
-		log.Info("Process", zap.Any("log is", line.Text))
+		resList := strings.Split(line.Text, " ")
+		log.Info("Process", zap.Any("log is", resList))
 	}
 }
 
