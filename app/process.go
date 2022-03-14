@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -44,9 +45,13 @@ func (p *ProcessLog) TailLog(filePath string) {
 	for line := range t.Lines {
 		log.Info("Process", zap.Any("log is", line.Text))
 		resList := strings.Split(line.Text, " ")
-		for _, v := range resList {
-			log.Info("Process", zap.Any("log is", v))
+		for i, v := range resList {
+			fmt.Printf("log index is %d, log is %s \n", i, v)
 		}
+		// log.Info("Process", zap.Any("log remoteAddr is", resList[0]))
+		// log.Info("Process", zap.Any("log remoteUser is", resList[3]))
+		// log.Info("Process", zap.Any("log timeLocal is", resList[4]+resList[5]))
+		// log.Info("Process", zap.Any("log request is", resList[7] + " " + resList[8] + " " + resList[9]))
 	}
 }
 
