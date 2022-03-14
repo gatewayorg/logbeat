@@ -66,9 +66,7 @@ func (p *ProcessLog) TailLog(filePath string) {
 			log.Info("Process", zap.Any("log status is", resList[10]))
 		}
 		responseList := rgx.FindStringSubmatch(line.Text)
-		if len(responseList) == 1 {
-			log.Info("Process", zap.Any("log request body is", responseList[0]))
-		}
+		log.Info("Process", zap.Any("log request body is", responseList))
 
 		// reader := gonx.NewReader(strings.NewReader(line.Text), nginxFormat)
 		// res, err := reader.Read()
