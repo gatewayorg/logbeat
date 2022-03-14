@@ -43,8 +43,11 @@ func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
 		return nil
 	}
 
-	responseList := rgx.FindStringSubmatch(logText)
-	requestBody = responseList[0]
+	requestBodyList := rgx.FindStringSubmatch(logText)
+	if len(request) == 0 {
+		return nil
+	}
+	requestBody = requestBodyList[0]
 	requestBodyStr := strings.Replace(requestBody, "\\x22", `"`, -1)
 	var requestBodyRes requestBodyCon
 	fmt.Println("requestBodyStr", requestBodyStr)
