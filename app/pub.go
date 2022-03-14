@@ -44,7 +44,7 @@ func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
 	}
 
 	requestBodyList := rgx.FindStringSubmatch(logText)
-	if len(request) == 0 {
+	if len(requestBodyList) == 0 {
 		return nil
 	}
 	requestBody = requestBodyList[0]
