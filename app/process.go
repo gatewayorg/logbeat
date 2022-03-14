@@ -42,6 +42,7 @@ func (p *ProcessLog) TailLog(filePath string) {
 		return
 	}
 	for line := range t.Lines {
+		log.Info("Process", zap.Any("log is", line.Text))
 		resList := strings.Split(line.Text, " ")
 		for _, v := range resList {
 			log.Info("Process", zap.Any("log is", v))

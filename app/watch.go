@@ -38,7 +38,7 @@ func (w *WatchDir) WatchDir() {
 
 		files, _ := ioutil.ReadDir(w.dirPath)
 		for _, f := range files {
-			if f.IsDir() {
+			if f.IsDir() && len(f.Name()) == 64 {
 				pathRes := w.dirPath + "/" + f.Name() + share.LOG_FILE_PATH_SUFFIX
 				existsFlag, _ := PathExists(pathRes)
 				if existsFlag {
