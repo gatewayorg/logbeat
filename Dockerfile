@@ -1,7 +1,7 @@
 FROM golang:1.15-alpine as builder
 LABEL builder=gateway-logbeat
 WORKDIR /src
-RUN go env -w  GOPROXY=https://goproxy.cn,direct
+# RUN go env -w  GOPROXY=https://goproxy.cn,direct
 
 ADD . .
 
