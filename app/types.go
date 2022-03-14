@@ -10,7 +10,6 @@ type AccessLog struct {
 	httpReferer          string
 	httpUserAgent        string
 	httpXForwardedFor    string
-	upStreamAddr         string
 	requestTime          string
 	upstreamResponseTime string
 	upstreamAddr         string

@@ -48,10 +48,14 @@ func (p *ProcessLog) TailLog(filePath string) {
 		for i, v := range resList {
 			fmt.Printf("log index is %d, log is %s \n", i, v)
 		}
-		// log.Info("Process", zap.Any("log remoteAddr is", resList[0]))
-		// log.Info("Process", zap.Any("log remoteUser is", resList[3]))
-		// log.Info("Process", zap.Any("log timeLocal is", resList[4]+resList[5]))
-		// log.Info("Process", zap.Any("log request is", resList[7] + " " + resList[8] + " " + resList[9]))
+		log.Info("Process", zap.Any("log remoteAddr is", resList[0]))
+		log.Info("Process", zap.Any("log remoteUser is", resList[3]))
+		log.Info("Process", zap.Any("log timeLocal is", resList[4]+resList[5]))
+		log.Info("Process", zap.Any("log request is", resList[7]+" "+resList[8]+" "+resList[9]))
+		log.Info("Process", zap.Any("log status is", resList[10]))
+		log.Info("Process", zap.Any("log bodyBytesSent is", resList[11]))
+		log.Info("Process", zap.Any("log requestTime is", resList[16]))
+		log.Info("Process", zap.Any("log requestBody is", resList[18]))
 	}
 }
 
