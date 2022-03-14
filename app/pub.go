@@ -39,6 +39,8 @@ func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
 		timeLocal = resList[4] + " " + resList[5]
 		request = resList[7] + " " + resList[8] + " " + resList[9]
 		status = resList[10]
+	} else {
+		return nil
 	}
 
 	responseList := rgx.FindStringSubmatch(logText)
