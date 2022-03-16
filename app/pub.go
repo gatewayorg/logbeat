@@ -18,8 +18,8 @@ import (
 
 type requestBodyCon struct {
 	Jsonrpc string `json:"jsonrpc"`
-	Id      int64  `json:"id"`
-	Method  string `json:"method"`
+	// Id      int64  `json:"id"`
+	Method string `json:"method"`
 }
 
 var (
@@ -85,7 +85,6 @@ func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
 		XUserID:    apiId,
 		MethodName: requestBodyRes.Method,
 		Request:    []byte(requestBodyStr),
-		JsonrpcID:  requestBodyRes.Id,
 		Code:       int32(statusInt64),
 	}
 
