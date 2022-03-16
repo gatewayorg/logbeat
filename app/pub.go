@@ -52,7 +52,9 @@ func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
 	if err != nil {
 		log.Info("Pub", zap.Error(err))
 		return nil
-	} else {
+	}
+
+	if requestBodyResMatch != nil {
 		requestBody = "{" + requestBodyResMatch.String() + "}"
 	}
 
