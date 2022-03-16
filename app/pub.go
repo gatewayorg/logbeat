@@ -112,11 +112,20 @@ func NewPubMetrics(nsqdAddress []string) *PubMetrics {
 		produce, _ := nsq.NewProducer(address, config)
 		err := produce.Ping()
 		if err == nil {
-			log.Error("Pub", zap.Error(err))
 			producerMap[address] = produce
+		} else {
+			log.Error("Pub", zap.Error(err))
 		}
 	}
 	log.Info("Pub", zap.Any("init mq success", producerMap))
+
+	go func() {
+		for {
+			time.Sleep(5 * time.Minute)
+			pingAndkeepalive(producerMap)
+		}
+	}()
+
 	return &PubMetrics{
 		ProducerMap:  producerMap,
 		MetricsTopic: logBeat.LogbeatMetricsTopic,
@@ -126,16 +135,16 @@ func NewPubMetrics(nsqdAddress []string) *PubMetrics {
 
 func pingAndkeepalive(producerMap map[string]*nsq.Producer) {
 	// ping and keep live
-	for {
-		for addressKey, producerConn := range producerMap {
-			err := producerConn.Ping()
-			if err != nil {
-				log.Error("Pub", zap.Error(err))
-				delete(producerMap, addressKey)
-			}
+	log.Info("keep alive")
+	for addressKey, producerConn := range producerMap {
+		err := producerConn.Ping()
+		if err != nil {
+			log.Error("Pub", zap.Error(err))
+			delete(producerMap, addressKey)
 		}
-		time.Sleep(5 * time.Minute)
 	}
+	time.Sleep(5 * time.Minute)
+
 }
 
 func (pub *PubMetrics) ProducerPub(message *logBeat.MetricsV2) error {
