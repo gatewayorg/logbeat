@@ -30,8 +30,8 @@ var (
 func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
 
 	var (
-		remoteAddr  string
-		timeLocal   string
+		remoteAddr string
+		// timeLocal   string
 		request     string
 		status      string
 		requestBody string
@@ -41,7 +41,7 @@ func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
 	resList := strings.Split(logText, " ")
 	if len(resList) >= 15 {
 		remoteAddr = resList[0]
-		timeLocal = resList[4] + " " + resList[5]
+		// timeLocal = resList[4] + " " + resList[5]
 		request = resList[7] + " " + resList[8] + " " + resList[9]
 		status = resList[10]
 	} else {
@@ -68,16 +68,15 @@ func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
 	err = json.Unmarshal([]byte(requestBodyStr), &requestBodyRes)
 	if err != nil {
 		log.Error("Pub", zap.Error(err))
-	} else {
 		requestBodyRes.Method = ""
 	}
 	// fmt.Println("requestBodyRes", requestBodyRes)
 
-	sentTime, err := time.Parse("02/Jan/2006:15:04:05 -0700", timeLocal)
-	if err != nil {
-		log.Error("Pub", zap.Error(err))
-		return nil
-	}
+	// sentTime, err := time.Parse("02/Jan/2006:15:04:05 -0700", timeLocal)
+	// if err != nil {
+	// 	log.Error("Pub", zap.Error(err))
+	// 	return nil
+	// }
 
 	requestList := strings.Split(request, `/`)
 	if len(requestList) >= 5 && len(requestList[1]) == 32 {
@@ -92,7 +91,7 @@ func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
 
 	res := &logBeat.MetricsV2{
 		XReadIp:    remoteAddr,
-		Index:      sentTime.UnixNano(),
+		Index:      time.Now().UnixNano(),
 		XUserID:    apiId,
 		MethodName: requestBodyRes.Method,
 		Request:    []byte(requestBodyStr),

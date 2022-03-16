@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: gateway-logbeat-ds
+  namespace: kube-system
+  labels:
+    deploy: gateway-logbeat-ds
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: gateway-logbeat-ds
+  template:
+    metadata:
+      labels:
+        app: gateway-logbeat-ds
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: gateway
+                operator: In
+                values:
+                - blue-gw
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - gateway-logbeat-ds
+            topologyKey: kubernetes.io/hostname
+      containers:
+        - name: gateway-logbeat
+          image: "levtea/gateway-logbeat:feat"
+          imagePullPolicy: Always
+          command:
+            - ./entrypoint.sh
+          args:
+            - ./server
+            - -log_dir
+            - "/mnt/gateway_log"
+            - -pub_address
+            - "192.168.9.1:4150"
+            - -pub_address
+            - "192.168.9.2:4150"
+            - -pub_address
+            - "192.168.9.3:4150"
+          volumeMounts:
+          - mountPath: /mnt/gateway_log
+            name: gateway-logs
+          resources:
+            limits:
+              cpu: "2"
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 512Mi
+      volumes:
+        - name: gateway-logs
+          hostPath:
+            path: /run/containerd/io.containerd.runtime.v2.task/k8s.io
+
