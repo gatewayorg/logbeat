@@ -65,6 +65,9 @@ func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
 	requestBodyStr := strings.Replace(requestBody, "\\x22", `"`, -1)
 	var requestBodyRes requestBodyCon
 	fmt.Println("requestBodyStr", requestBodyStr)
+	if requestBodyStr == "" {
+		return nil
+	}
 	err = json.Unmarshal([]byte(requestBodyStr), &requestBodyRes)
 	if err != nil {
 		log.Error("Pub", zap.Error(err))
