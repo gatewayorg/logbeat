@@ -32,7 +32,7 @@ func NewWatchDir(dirPath string) *WatchDir {
 	}
 }
 
-func (w *WatchDir) WatchDir() {
+func (w *WatchDir) WatchDir(pubMetrics *PubMetrics) {
 	for {
 		log.Info("Watch", zap.Any("Start watch this dir", w.dirPath))
 
@@ -44,7 +44,7 @@ func (w *WatchDir) WatchDir() {
 				if existsFlag {
 					if !w.pathMap[pathRes] {
 						w.pathMap[pathRes] = true
-						processLog := NewProcessLog(pathRes)
+						processLog := NewProcessLog(pathRes, pubMetrics)
 						processLog.Process()
 						log.Info("Watch", zap.Any("start process this log", pathRes))
 					} else {

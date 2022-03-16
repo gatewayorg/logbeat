@@ -16,18 +16,18 @@ func TestWatch(t *testing.T) {
 	// 	testProcessLog.Process()
 	// }
 
-	StartProcess("../test/")
+	StartProcess("../test/", nil)
 }
 
 func TestTailLog(t *testing.T) {
-	testProcessLog := NewProcessLog("../test/access.log")
+	testProcessLog := NewProcessLog("../test/access.log", nil)
 	testProcessLog.Process()
 	select {}
 }
 
 func TestWatchDir(t *testing.T) {
 	testWatchDir := NewWatchDir("/Users/renzihao/project/github.com/gatewayorg/logbeat/test/run/containerd/io.containerd.runtime.v2.task/k8s.io")
-	testWatchDir.WatchDir()
+	testWatchDir.WatchDir(nil)
 }
 
 func TestTransferMetricsToProtobuf(t *testing.T) {
