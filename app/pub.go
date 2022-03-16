@@ -99,7 +99,7 @@ type PubMetrics struct {
 	MetricsTopic string
 }
 
-func NewPubMetrics(nsqdAddress ...string) *PubMetrics {
+func NewPubMetrics(nsqdAddress []string) *PubMetrics {
 	producerMap := make(map[string]*nsq.Producer)
 	// init nsqd
 	if len(nsqdAddress) == 0 {
@@ -108,6 +108,7 @@ func NewPubMetrics(nsqdAddress ...string) *PubMetrics {
 	}
 	config := nsq.NewConfig()
 	for _, address := range nsqdAddress {
+		fmt.Println("address:", address)
 		produce, _ := nsq.NewProducer(address, config)
 		err := produce.Ping()
 		if err == nil {

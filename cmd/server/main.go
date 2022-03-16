@@ -36,8 +36,8 @@ func main() {
 
 func mainServe(c *cli.Context) error {
 
-	log.Info("init", zap.Any("pub", c.String(share.MQ_ADDRESS)))
-	app.NewPubMetrics(c.String(share.MQ_ADDRESS))
+	log.Info("init", zap.Any("pub", c.StringSlice(share.MQ_ADDRESS)))
+	app.NewPubMetrics(c.StringSlice(share.MQ_ADDRESS))
 	// log.Info("init", zap.Any("dir", c.String(share.LOG_DIR)))
 	// app.StartProcess(c.String(share.LOG_DIR))
 
