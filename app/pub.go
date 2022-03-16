@@ -5,12 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
 	logBeat "github.com/Ankr-network/dccn-common/protos/logbeat"
+	"github.com/dlclark/regexp2"
 	"github.com/nsqio/go-nsq"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
@@ -23,7 +23,8 @@ type requestBodyCon struct {
 }
 
 var (
-	rgx = regexp.MustCompile(`\{(.*?)\}`)
+	// rgx = regexp.MustCompile(`\{(.*?)\}`)
+	rgx = regexp2.MustCompile(`(?<=\{).*(?=\})`, 0)
 )
 
 func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
@@ -47,18 +48,26 @@ func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
 		return nil
 	}
 
-	requestBodyList := rgx.FindStringSubmatch(logText)
-	if len(requestBodyList) == 0 {
+	requestBodyResMatch, err := rgx.FindStringMatch(logText)
+	if err != nil {
+		log.Info("Pub", zap.Error(err))
 		return nil
+	} else {
+		requestBody = "{" + requestBodyResMatch.String() + "}"
 	}
-	requestBody = requestBodyList[0]
+
+	// if len(requestBodyList) == 0 {
+	// 	return nil
+	// }
+	// requestBody = requestBodyList[0]
 	requestBodyStr := strings.Replace(requestBody, "\\x22", `"`, -1)
 	var requestBodyRes requestBodyCon
 	fmt.Println("requestBodyStr", requestBodyStr)
-	err := json.Unmarshal([]byte(requestBodyStr), &requestBodyRes)
+	err = json.Unmarshal([]byte(requestBodyStr), &requestBodyRes)
 	if err != nil {
 		log.Error("Pub", zap.Error(err))
-		return nil
+	} else {
+		requestBodyRes.Method = ""
 	}
 	// fmt.Println("requestBodyRes", requestBodyRes)
 
