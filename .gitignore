@@ -16,3 +16,4 @@ bin/*
 logs/*
 .vscode
 test/*
+**/.DS_Store
