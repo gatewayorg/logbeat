@@ -19,6 +19,11 @@ func main() {
 			Usage:    "log dir path",
 			Required: true,
 		},
+		&cli.StringSliceFlag{
+			Name:     share.MQ_ADDRESS,
+			Required: true,
+			Usage:    "mq address",
+		},
 	}
 	svr := cli.NewApp()
 	svr.Action = mainServe
@@ -31,9 +36,10 @@ func main() {
 
 func mainServe(c *cli.Context) error {
 
-	log.Info("init", zap.Any("dir", c.String(share.LOG_DIR)))
-
-	app.StartProcess(c.String(share.LOG_DIR))
+	log.Info("init", zap.Any("pub", c.String(share.MQ_ADDRESS)))
+	app.NewPubMetrics(c.String(share.MQ_ADDRESS))
+	// log.Info("init", zap.Any("dir", c.String(share.LOG_DIR)))
+	// app.StartProcess(c.String(share.LOG_DIR))
 
 	// app.StartProcess(c.String(share.LOG_DIR))
 

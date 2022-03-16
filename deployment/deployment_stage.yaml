@@ -43,6 +43,10 @@ spec:
             - ./server
             - -log_dir
             - "/mnt/gateway_log"
+            - -pub_address
+            - "nsqd-1.apiservice.svc.cluster.local:4150"
+            - -pub_address
+            - "nsqd-2.apiservice.svc.cluster.local:4150"
           volumeMounts:
           - mountPath: /mnt/gateway_log
             name: gateway-logs

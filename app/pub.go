@@ -111,9 +111,11 @@ func NewPubMetrics(nsqdAddress ...string) *PubMetrics {
 		produce, _ := nsq.NewProducer(address, config)
 		err := produce.Ping()
 		if err == nil {
+			log.Error("Pub", zap.Error(err))
 			producerMap[address] = produce
 		}
 	}
+	log.Info("Pub", zap.Any("init mq success", producerMap))
 	return &PubMetrics{
 		ProducerMap:  producerMap,
 		MetricsTopic: logBeat.LogbeatMetricsTopic,
