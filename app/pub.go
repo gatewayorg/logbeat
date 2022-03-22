@@ -52,6 +52,8 @@ func TransferMetricsToProtobuf(logText string, filterMap map[string]bool) *logBe
 	if len(requestList) >= 5 && len(requestList[1]) == 32 {
 		apiId = requestList[1]
 		node := requestList[3]
+		fmt.Println("node is", node)
+		fmt.Println("filterMap is", filterMap)
 		if !filterMap[node] {
 			log.Info("Pub", zap.Any("ignore this node", node))
 		}
