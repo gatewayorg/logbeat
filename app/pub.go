@@ -27,7 +27,7 @@ var (
 	rgx = regexp2.MustCompile(`(?<=\{).*(?=\})`, 0)
 )
 
-func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
+func TransferMetricsToProtobuf(logText string, filterMap map[string]bool) *logBeat.MetricsV2 {
 
 	var (
 		remoteAddr string
@@ -84,6 +84,8 @@ func TransferMetricsToProtobuf(logText string) *logBeat.MetricsV2 {
 	requestList := strings.Split(request, `/`)
 	if len(requestList) >= 5 && len(requestList[1]) == 32 {
 		apiId = requestList[1]
+		fmt.Println("request path", requestList)
+		fmt.Println("filter map", filterMap)
 	}
 
 	statusInt64, err := strconv.ParseInt(status, 10, 64)

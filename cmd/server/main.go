@@ -24,6 +24,11 @@ func main() {
 			Required: true,
 			Usage:    "mq address",
 		},
+		&cli.StringSliceFlag{
+			Name:     share.FILTER_SETTINGS,
+			Required: false,
+			Usage:    "filter settings",
+		},
 	}
 	svr := cli.NewApp()
 	svr.Action = mainServe
@@ -36,10 +41,12 @@ func main() {
 
 func mainServe(c *cli.Context) error {
 
+	log.Info("init", zap.Any("filter", c.StringSlice(share.FILTER_SETTINGS)))
+
 	log.Info("init", zap.Any("pub", c.StringSlice(share.MQ_ADDRESS)))
 	pubMetrics := app.NewPubMetrics(c.StringSlice(share.MQ_ADDRESS))
 	log.Info("init", zap.Any("dir", c.String(share.LOG_DIR)))
-	app.StartProcess(c.String(share.LOG_DIR), pubMetrics)
+	app.StartProcess(c.String(share.LOG_DIR), pubMetrics, c.StringSlice(share.MQ_ADDRESS))
 
 	// app.StartProcess(c.String(share.LOG_DIR))
 

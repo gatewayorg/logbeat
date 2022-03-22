@@ -12,19 +12,27 @@ type ProcessLog struct {
 	path       string
 	tailConfig tail.Config
 	pubMetrics *PubMetrics
+	filter     map[string]bool
 }
 
-func NewProcessLog(path string, pubMetrics *PubMetrics) *ProcessLog {
+func NewProcessLog(path string, pubMetrics *PubMetrics, filter []string) *ProcessLog {
 	seek := &tail.SeekInfo{}
 	seek.Offset = 0
 	seek.Whence = os.SEEK_END
 	tailConfig := tail.Config{}
 	tailConfig.Follow = true
 	tailConfig.Location = seek
+	filterMap := make(map[string]bool)
+	if len(filter) != 0 {
+		for _, k := range filter {
+			filterMap[k] = true
+		}
+	}
 	return &ProcessLog{
 		path:       path,
 		tailConfig: tailConfig,
 		pubMetrics: pubMetrics,
+		filter:     filterMap,
 	}
 }
 
@@ -44,7 +52,7 @@ func (p *ProcessLog) TailLog(filePath string) {
 	}
 	for line := range t.Lines {
 		log.Info("Process", zap.Any("log is", line.Text))
-		message := TransferMetricsToProtobuf(line.Text)
+		message := TransferMetricsToProtobuf(line.Text, p.filter)
 		if message != nil {
 			err := p.pubMetrics.ProducerPub(message)
 			if err != nil {
@@ -54,9 +62,9 @@ func (p *ProcessLog) TailLog(filePath string) {
 	}
 }
 
-func StartProcess(dir string, pubMetrics *PubMetrics) {
+func StartProcess(dir string, pubMetrics *PubMetrics, filter []string) {
 
 	WatchDir := NewWatchDir(dir)
-	WatchDir.WatchDir(pubMetrics)
+	WatchDir.WatchDir(pubMetrics, filter)
 	select {}
 }
