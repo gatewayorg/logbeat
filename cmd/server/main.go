@@ -46,7 +46,7 @@ func mainServe(c *cli.Context) error {
 	log.Info("init", zap.Any("pub", c.StringSlice(share.MQ_ADDRESS)))
 	pubMetrics := app.NewPubMetrics(c.StringSlice(share.MQ_ADDRESS))
 	log.Info("init", zap.Any("dir", c.String(share.LOG_DIR)))
-	app.StartProcess(c.String(share.LOG_DIR), pubMetrics, c.StringSlice(share.MQ_ADDRESS))
+	app.StartProcess(c.String(share.LOG_DIR), pubMetrics, c.StringSlice(share.FILTER_SETTINGS))
 
 	// app.StartProcess(c.String(share.LOG_DIR))
 

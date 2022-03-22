@@ -49,6 +49,12 @@ spec:
             - "nsqd-2.apiservice.svc.cluster.local:4150"
             - -pub_address
             - "nsqd-3.apiservice.svc.cluster.local:4150"
+            - -filter_settings
+            - "bsc"
+            - -filter_settings
+            - "eth"
+            - -filter_settings
+            - "polygon"
           volumeMounts:
           - mountPath: /mnt/gateway_log
             name: gateway-logs

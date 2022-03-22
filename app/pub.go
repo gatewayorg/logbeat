@@ -48,6 +48,15 @@ func TransferMetricsToProtobuf(logText string, filterMap map[string]bool) *logBe
 		return nil
 	}
 
+	requestList := strings.Split(request, `/`)
+	if len(requestList) >= 5 && len(requestList[1]) == 32 {
+		apiId = requestList[1]
+		node := requestList[3]
+		if !filterMap[node] {
+			log.Info("Pub", zap.Any("ignore this node", node))
+		}
+	}
+
 	requestBodyResMatch, err := rgx.FindStringMatch(logText)
 	if err != nil {
 		log.Info("Pub", zap.Error(err))
@@ -80,13 +89,6 @@ func TransferMetricsToProtobuf(logText string, filterMap map[string]bool) *logBe
 	// 	log.Error("Pub", zap.Error(err))
 	// 	return nil
 	// }
-
-	requestList := strings.Split(request, `/`)
-	if len(requestList) >= 5 && len(requestList[1]) == 32 {
-		apiId = requestList[1]
-		fmt.Println("request path", requestList)
-		fmt.Println("filter map", filterMap)
-	}
 
 	statusInt64, err := strconv.ParseInt(status, 10, 64)
 	if err != nil {
