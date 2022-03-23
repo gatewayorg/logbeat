@@ -99,6 +99,10 @@ func TransferMetricsToProtobuf(logText string, filterMap map[string]bool) *logBe
 		return nil
 	}
 
+	if requestList[len(requestList)-1] == "graphql" {
+		requestBodyRes.Method = "graphql request"
+	}
+
 	res := &logBeat.MetricsV2{
 		XReadIp:    remoteAddr,
 		Index:      time.Now().UnixNano(),

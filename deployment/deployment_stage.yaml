@@ -50,7 +50,7 @@ spec:
             - -pub_address
             - "nsqd-3.apiservice.svc.cluster.local:4150"
             - -filter_settings
-            - "bsc"
+            - "binance"
             - -filter_settings
             - "eth"
             - -filter_settings

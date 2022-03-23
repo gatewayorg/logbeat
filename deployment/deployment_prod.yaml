@@ -49,6 +49,12 @@ spec:
             - "192.168.9.2:4150"
             - -pub_address
             - "192.168.9.3:4150"
+            - -filter_settings
+            - "binance"
+            - -filter_settings
+            - "eth"
+            - -filter_settings
+            - "polygon"
           volumeMounts:
           - mountPath: /mnt/gateway_log
             name: gateway-logs
