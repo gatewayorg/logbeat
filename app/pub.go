@@ -99,8 +99,10 @@ func TransferMetricsToProtobuf(logText string, filterMap map[string]bool) *logBe
 		return nil
 	}
 
+	fmt.Println("last requestList is ", requestList[len(requestList)-1])
 	if requestList[len(requestList)-1] == "graphql" {
 		requestBodyRes.Method = "graphql request"
+		fmt.Println("graphql!!!")
 	}
 
 	res := &logBeat.MetricsV2{
